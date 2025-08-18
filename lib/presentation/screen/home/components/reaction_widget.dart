@@ -16,20 +16,23 @@ class ReactionsWidget extends StatefulWidget {
 }
 
 class _ReactionsWidgetState extends State<ReactionsWidget> {
-  // initial state
   final iconSize = 42.0;
   final iconSpacing = 8.0;
 
-  final icons = [
-    "assets/icon/romance.png",
-    "assets/icon/dead.png",
-    "assets/icon/spooky.png",
-    "assets/icon/superstar.png",
-    "assets/icon/confusion.png",
+  final reactions = [
+    {"icon": "assets/icon/like.png", "text": "Like"},
+    {"icon": "assets/icon/love.png", "text": "Love"},
+    {"icon": "assets/icon/care.png", "text": "Care"},
+    {"icon": "assets/icon/haha.png", "text": "Haha"},
+    {"icon": "assets/icon/wow.png", "text": "Wow"},
+    {"icon": "assets/icon/sad.png", "text": "Sad"},
+    {"icon": "assets/icon/angry.png", "text": "Angry"},
   ];
 
   final _hoveredIndex = ValueNotifier<int?>(null);
   OverlayEntry? _overlayEntry;
+
+  int _selectedIndex = 0; // ✅ Keep track of selected reaction
 
   @override
   void dispose() {
@@ -49,13 +52,14 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
         color: Colors.transparent,
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          spacing: 10,
           children: [
+            // ✅ Show the selected reaction icon
             DesignImage(
-              PngAssets(icons[0]),
+              PngAssets(reactions[_selectedIndex]["icon"]!),
               width: 32,
               height: 32,
             ),
+            const SizedBox(width: 10),
             Text("Hold for other Reactions"),
           ],
         ),
@@ -64,7 +68,9 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
   }
 
   void onTap() {
-    widget.onSelected(icons[0]);
+    // Default action → Like
+    setState(() => _selectedIndex = 0);
+    widget.onSelected(reactions[0]["icon"]!);
   }
 
   void onLongPressStart(LongPressStartDetails _) {
@@ -80,7 +86,6 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
 
         return Stack(
           children: [
-            // barrier dismissible
             GestureDetector(
               onTap: _removeOverlay,
               child: Container(
@@ -90,7 +95,6 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
               ),
             ),
 
-            // popup
             Positioned(
               left: offset.dx,
               bottom: sHeight - offset.dy + 8,
@@ -111,25 +115,42 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
                   builder: (context, hovered, _) {
                     return Row(
                       mainAxisSize: MainAxisSize.min,
-                      spacing: iconSpacing,
-                      children:
-                      List.generate(icons.length, (index) {
-                        final icon = icons[index];
+                      children: List.generate(reactions.length, (index) {
+                        final reaction = reactions[index];
+                        final icon = reaction["icon"]!;
+                        final text = reaction["text"]!;
                         final isHovered = hovered == index;
 
                         return GestureDetector(
                           onTap: () {
+                            setState(() => _selectedIndex = index); // ✅ Update selected
                             widget.onSelected(icon);
                             _removeOverlay();
                           },
-                          child: AnimatedScale(
-                            scale: isHovered ? 1.5 : 1,
-                            duration: const Duration(milliseconds: 150),
-                            child: DesignImage(
-                              PngAssets(icon),
-                              width: iconSize,
-                              height: iconSize,
-                            ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (isHovered)
+                                Text(
+                                  text,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColor.primaryColor,
+                                  ),
+                                ),
+                              if (isHovered) const SizedBox(height: 4),
+
+                              AnimatedScale(
+                                scale: isHovered ? 1.5 : 1,
+                                duration: const Duration(milliseconds: 150),
+                                child: DesignImage(
+                                  PngAssets(icon),
+                                  width: iconSize,
+                                  height: iconSize,
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       }).toList(),
@@ -155,7 +176,7 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
     final iconFullWidth = iconSize + iconSpacing;
     final index = (offsetX / iconFullWidth).floor();
 
-    if (index >= 0 && index < icons.length) {
+    if (index >= 0 && index < reactions.length) {
       _hoveredIndex.value = index;
     } else {
       _hoveredIndex.value = null;
@@ -164,10 +185,9 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
 
   void onLongPressEnd(LongPressEndDetails _) {
     final index = _hoveredIndex.value;
-
     if (index != null) {
-      widget.onSelected(icons[index]);
-
+      setState(() => _selectedIndex = index); // ✅ Update selected
+      widget.onSelected(reactions[index]["icon"]!);
       _removeOverlay();
       _hoveredIndex.value = null;
     }
@@ -178,3 +198,4 @@ class _ReactionsWidgetState extends State<ReactionsWidget> {
     _overlayEntry = null;
   }
 }
+
