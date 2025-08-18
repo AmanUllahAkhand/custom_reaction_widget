@@ -1,16 +1,18 @@
-# custom_reaction_widget
+# Custom Reaction Widget 🎭
 
-A new Flutter project.
+A **Custom Reaction Widget** built with **Flutter**, designed to display reaction icons (like 👍❤️😂😮😢😡) with smooth UI.  
+This widget is reusable and can be easily integrated into any Flutter project where reaction-style interactions are needed.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## 🚀 Features
+- Customizable reaction icons.
+- Easy to integrate in any Flutter app.
+- Clean and responsive UI design.
+- Reusable widget for multiple use cases.
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📸 Demo
+Check out the live demo and details in my LinkedIn post:  
+👉 [LinkedIn Post](https://www.linkedin.com/posts/aman-ullah-akhand-4959a221b_flutter-mobiledevelopment-ui-activity-7363259697853816832-rHTZ?utm_source=share&utm_medium=member_desktop&rcm=ACoAADd_VjEBeCJ-qTHLN6jfzSLPXSZRXhS_oS8)
